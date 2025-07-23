@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ request.COOKIES.theme|default:'light' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Digital Phoksundo{% endblock %}</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.min.css" rel="stylesheet"/>
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<div class="main-wrapper">
+  <!-- Sidebar (Desktop) -->
+  <aside class="app-sidebar d-none d-lg-flex">
+    <a href="{% url 'core:home' %}" class="sidebar-brand">
+      <i class="bi bi-buildings"></i><span>Phoksundo</span>
+    </a>
+    <nav class="sidebar-nav">
+        <li class="nav-item"><a href="{% url 'core:home' %}" class="nav-link"><i class="bi bi-box-arrow-up-right"></i> <span class="nav-text">Dashboard</span></a></li>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a href="{% url 'darta_chalani:chalani_list' %}" class="nav-link"><i class="bi bi-box-arrow-up-right"></i> <span class="nav-text">चलानी</span></a></li>
+        <li class="nav-item"><a href="{% url 'darta_chalani:darta_list' %}" class="nav-link"><i class="bi bi-box-arrow-in-down"></i> <span class="nav-text">दर्ता</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-graph-up"></i> <span class="nav-text">रिपोर्ट</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-file-earmark-text"></i> <span class="nav-text">कार्यादेश</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-people"></i> <span class="nav-text">सम्पर्क</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-archive"></i> <span class="nav-text">सूचना</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-life-preserver"></i> <span class="nav-text">गुनासो</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> <span class="nav-text">Settings</span></a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer mt-auto">
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'users:logout' %}">
+        {% csrf_token %}
+        <button class="btn btn-outline-danger btn-sm w-100"><i class="bi bi-box-arrow-left me-2"></i> Logout</button>
+      </form>
+      {% else %}
+      <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-box-arrow-in-right me-2"></i> Login</a>
+      {% endif %}
+      <button id="themeToggle" class="btn btn-outline-secondary btn-sm w-100 mt-2"><i id="themeIcon" class="bi me-2"></i> <span id="themeText">Toggle Theme</span></button>
+    </div>
+  </aside>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <div class="dev-credit-banner"><p>शे फोक्सुण्डो गाउँपालिका सूचना प्रविधि शाखा द्वारा तयार पारिएको</p></div>
+
+    <!-- Topbar -->
+    <header class="app-topbar d-lg-none">
+      <button class="btn btn-link" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"><i class="bi bi-list fs-3"></i></button>
+      <h1 class="h5 mb-0 ms-2">{% block page_title %}Dashboard{% endblock %}</h1>
+    </header>
+
+    <!-- Page Content -->
+    <main class="app-main">
+      {% if messages %}{% for msg in messages %}
+      <div class="alert alert-{{ msg.tags }} alert-dismissible fade show" role="alert">{{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}{% endif %}
+      <div class="card"><div class="card-body">{% block content %}{% endblock %}</div></div>
+    </main>
+
+  </div>
+</div>
+
+<!-- Mobile Sidebar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Phoksundo Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul class="nav flex-column">
+         <li class="nav-item"><a href="{% url 'core:home' %}" class="nav-link"><i class="bi bi-box-arrow-up-right"></i> <span class="nav-text">Dashboard</span></a></li>
+      <ul class="nav flex-column">
+      <li class="nav-item"><a href="{% url 'darta_chalani:chalani_list' %}" class="nav-link"><i class="bi bi-box-arrow-up-right"></i> चलानी</a></li>
+      <li class="nav-item"><a href="{% url 'darta_chalani:darta_list' %}" class="nav-link"><i class="bi bi-box-arrow-in-down"></i> दर्ता</a></li>
+      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-graph-up"></i> रिपोर्ट</a></li>
+      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> Settings</a></li>
+    </ul>
+    <div class="mt-4">
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'users:logout' %}">{% csrf_token %}
+        <button class="btn btn-outline-danger btn-sm w-100"><i class="bi bi-box-arrow-left me-2"></i> Logout</button>
+      </form>
+      {% else %}
+      <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-box-arrow-in-right me-2"></i> Login</a>
+      {% endif %}
+      <button id="themeToggleMobile" class="btn btn-outline-secondary btn-sm w-100 mt-2"><i id="themeIconMobile" class="bi me-2"></i> <span id="themeTextMobile">Toggle Theme</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
+<script src="{% static 'js/scripts.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+<script>
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeText = document.getElementById('themeText');
+  const themeToggleMobile = document.getElementById('themeToggleMobile');
+  const themeIconMobile = document.getElementById('themeIconMobile');
+  const themeTextMobile = document.getElementById('themeTextMobile');
+
+  const setTheme = (theme) => {
+    html.setAttribute('data-theme', theme);
+    document.cookie = `theme=${theme};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    const iconClass = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    const label = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    themeIcon.className = iconClass + ' me-2';
+    themeText.textContent = label;
+    themeIconMobile.className = iconClass + ' me-2';
+    themeTextMobile.textContent = label;
+  };
+
+  const currentTheme = document.cookie.replace(/(?:(?:^|.*;\s*)theme\s*=\s*([^;]*).*$)|^.*$/, "$1") || 'light';
+  setTheme(currentTheme);
+
+  themeToggle?.addEventListener('click', () => setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+  themeToggleMobile?.addEventListener('click', () => setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+</script>
+</body>
+</html>

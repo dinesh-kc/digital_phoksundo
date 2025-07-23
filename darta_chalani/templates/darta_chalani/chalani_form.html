@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ title }} - Digital Phoksundo{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5>{{ title }}</h5>
+        </div>
+        <div class="card-body">
+
+            {% for field in form %}
+                <div class="mb-3 {% if field.name == 'is_confidential' %}form-check{% endif %}">
+                    
+                    {% if field.name != 'is_confidential' %}
+                        {{ field.label_tag }}
+                    {% endif %}
+
+                    {# Use cut:"readonly" only for date fields #}
+                    {% if field.name == 'document_date' or field.name == 'expiry_date' or field.name == 'followup_date' %}
+                        {{ field.as_widget|safe|cut:"readonly" }}
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+
+                    {% if field.name == 'is_confidential' %}
+                        {{ field.label_tag }}
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+
+                    {% if field.help_text %}
+                        <div class="form-text text-muted small">{{ field.help_text }}</div>
+                    {% endif %}
+
+                    {% if field.name == 'attachment_file' and form.instance.pk and form.instance.attachment_file %}
+                        <p class="text-muted mt-2">
+                            Currently attached:
+                            <a href="{{ form.instance.attachment_file.url }}" target="_blank">
+                                {{ form.instance.attachment_file.name|slice:"-30:" }}
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Chalani</button>
+    <a href="{% url 'darta_chalani:chalani_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
+    <!-- Nepali Date Picker CSS + JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nepali-date-picker@2.0.2/dist/nepaliDatePicker.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/nepali-date-picker@2.0.2/dist/nepaliDatePicker.min.js"></script>
+
+    <!-- Initialize Nepali Date Picker -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+        $('.date-picker').each(function () {
+        $(this).removeAttr('readonly');
+        $(this).nepaliDatePicker({
+            closeOnDateSelect: true,
+            dateFormat: '%y-%m-%d'  // ✅ correct specifiers
+        });
+        });
+    }, 100);
+    });
+    </script>
+
+{% endblock %}

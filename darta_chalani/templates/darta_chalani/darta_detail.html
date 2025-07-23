@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load darta_filters %} {# Add this line #}
+
+{% block title %}Darta Details - {{ darta.document_number }} - Digital Phoksundo{% endblock %}
+{% block page_title %}Darta Details - {{ darta.document_number }}{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5>Darta Details: {{ darta.document_number }}</h5>
+    </div>
+    <div class="card-body">
+        <p><strong>Subject:</strong> {{ darta.subject }}</p>
+        <p><strong>Document Date:</strong> {{ darta.document_date|date:"Y-m-d" }}</p>
+        <p><strong>Fiscal Year:</strong> {{ darta.fiscal_year.year_name }}</p>
+        <p><strong>Sender Details:</strong> {{ darta.sender_receiver_info }}</p>
+        <p><strong>Department:</strong> {{ darta.department }}</p>
+        <p><strong>Document Type:</strong> {{ darta.document_type }}</p>
+        <p><strong>Confidential:</strong> {% if darta.is_confidential %}Yes{% else %}No{% endif %}</p>
+        <p><strong>Expiry Date:</strong> {% if darta.expiry_date %}{{ darta.expiry_date|date:"Y-m-d" }}{% else %}N/A{% endif %}</p>
+        <p><strong>Follow-up Date:</strong> {% if darta.followup_date %}{{ darta.followup_date|date:"Y-m-d" }}{% else %}N/A{% endif %}</p>
+        <p><strong>Remarks:</strong> {% if darta.remarks %}{{ darta.remarks }}{% else %}N/A{% endif %}</p>
+        <p><strong>Created By:</strong> {{ darta.created_by.username|default:"N/A" }} on {{ darta.created_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>Last Updated:</strong> {{ darta.updated_at|date:"Y-m-d H:i" }}</p>
+
+        <h5 class="mt-4">Attached File</h5>
+        {% if darta.attachment_file %}
+            <p>
+                <a href="{{ darta.attachment_file.url }}" target="_blank" class="btn btn-sm btn-success">
+                    View/Download: {{ darta.attachment_file|filename }} {# CHANGE THIS LINE #}
+                </a>
+            </p>
+        {% else %}
+            <p>No attached file for this Darta document.</p>
+        {% endif %}
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        <a href="{% url 'darta_chalani:darta_edit' darta.pk %}" class="btn btn-warning me-2">Edit Darta</a>
+        <a href="{% url 'darta_chalani:darta_delete' darta.pk %}" class="btn btn-danger">Delete Darta</a>
+    </div>
+</div>
+{% endblock %}

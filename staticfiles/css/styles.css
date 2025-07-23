@@ -1,0 +1,301 @@
+/* styles.css */
+
+:root {
+    --sidebar-bg: #ffffff;
+    --sidebar-text: #1e1e2f;
+    --sidebar-hover: #375a7f;
+    --main-bg: #f8f9fa;
+    --text-color: #1e1e2f;
+    --footer-bg: #007bff;
+    --font-size: 14px;
+    --navbar-height: 56px; /* Bootstrap's default fixed-top navbar height */
+}
+
+[data-theme="dark"] {
+    --sidebar-bg: #1e1e2f;
+    --sidebar-text: #c7c7d5;
+    --sidebar-hover: #2a3b5c;
+    --main-bg: #121212;
+    --text-color: #f0f0f0;
+    --footer-bg: #343451;
+
+    /* DataTables Dark Mode Specific Styles */
+    .dataTables_wrapper {
+        background-color: var(--sidebar-bg); /* Use sidebar background for wrapper */
+        color: var(--text-color);
+        border: 1px solid #333; /* A subtle border for dark mode */
+    }
+
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        background-color: #2b3035; /* Darker input background */
+        color: var(--text-color);
+        border: 1px solid #3e444a;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        background-color: #2b3035 !important; /* Darker pagination buttons */
+        color: var(--text-color) !important;
+        border-color: #3e444a !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        background-color: var(--sidebar-hover) !important; /* Active pagination button */
+        color: #fff !important;
+        border-color: var(--sidebar-hover) !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background-color: #3e444a !important; /* Hover state for pagination buttons */
+        color: var(--text-color) !important;
+    }
+
+    /* Table body text and striped rows */
+    .table {
+        color: var(--text-color);
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter stripe for dark mode */
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Hover background for dark mode */
+    }
+
+    /* Table header background and text */
+    .table thead th {
+        background-color: #2a3b5c; /* Darker header background */
+        color: #fff; /* White text for header */
+        border-bottom-color: #444; /* Darker border for header */
+    }
+
+    /* DataTables button overrides for dark theme */
+    .dt-button {
+        background-color: #2b3035; /* Darker background for DataTables buttons */
+        color: var(--text-color);
+        border-color: #3e444a;
+    }
+    .dt-button:hover {
+        background-color: #3e444a;
+        color: var(--text-color);
+    }
+
+    .dt-button.buttons-excel, .dt-button.buttons-csv {
+        background-color: #1a6f30; /* Darker green for Excel/CSV */
+        color: #fff;
+        border-color: #1a6f30;
+    }
+    .dt-button.buttons-excel:hover, .dt-button.buttons-csv:hover {
+        background-color: #208e3d;
+    }
+
+    .dt-button.buttons-print {
+        background-color: #0056b3; /* Darker blue for Print */
+        color: #fff;
+        border-color: #0056b3;
+    }
+    .dt-button.buttons-print:hover {
+        background-color: #0069d9;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--main-bg);
+    color: var(--text-color);
+    font-size: var(--font-size);
+    /* Removed height: 100vh; and overflow: hidden; from body to allow full page scrolling */
+}
+
+/* app-container is now min-vh-100, which handles height via flexbox */
+/* No specific height needed for .app-container now, it will grow based on content */
+
+/* Sidebar (Desktop) */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    width: 240px;
+    flex-shrink: 0; /* Prevent sidebar from shrinking when content grows */
+    height: calc(100vh - var(--navbar-height)); /* Occupy full height minus the mobile navbar height (even on desktop, for consistency) */
+    position: sticky; /* Makes it stick when scrolling main content */
+    top: var(--navbar-height); /* Sticks below the header (though desktop has no fixed header, this is for future proofing/consistency) */
+    border-right: 1px solid #ccc;
+    padding: 20px 15px;
+    font-size: 0.9rem;
+    overflow-y: auto; /* Enable vertical scrolling for sidebar content */
+}
+
+.sidebar .nav-link {
+    color: var(--sidebar-text);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    white-space: nowrap;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: var(--sidebar-hover);
+    color: #fff;
+}
+
+/* Buttons in sidebar */
+.sidebar button {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sidebar hr {
+    margin: 1rem 0;
+}
+
+/* Main Content */
+.main-content {
+    background: var(--main-bg);
+    color: var(--text-color);
+    flex-grow: 1; /* Allows it to take remaining width */
+    overflow-x: hidden; /* Prevent horizontal scroll for main content itself */
+    padding-top: 20px; /* Default top padding for desktop */
+}
+
+/* Footer */
+footer {
+    background-color: var(--footer-bg);
+    color: #fff;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 0.85rem;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+/* Scrollbar styling for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background-color: #eee;
+}
+
+/* Hide old mobile-specific elements as they are replaced by Offcanvas */
+.top-menu,
+.mobile-theme-toggle,
+.mobile-logout {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) { /* Bootstrap's 'md' breakpoint is 768px, so we target below that */
+    body {
+        padding-top: var(--navbar-height); /* Add padding to body for fixed mobile navbar */
+    }
+
+    .d-flex.flex-grow-1 { /* The container for sidebar and main-content */
+        flex-direction: column; /* Stack them vertically on mobile */
+    }
+
+    .sidebar {
+        display: none !important; /* Hide desktop sidebar explicitly on mobile */
+        /* Mobile menu is now handled by Bootstrap Offcanvas in base.html */
+        height: auto; /* Reset height */
+        position: relative; /* Reset position */
+        top: auto;
+    }
+
+    .main-content {
+        padding-top: 1rem; /* Adjust padding for mobile content below fixed header */
+        width: 100%; /* Ensure main content takes full width */
+    }
+}
+
+/* DataTables specific styles for better fit and appearance */
+.dataTables_wrapper {
+    padding: 15px; /* Add some padding around the table controls */
+    background-color: var(--sidebar-bg); /* Use theme variable for consistency */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+.dataTables_wrapper .dt-buttons {
+    float: right;
+    margin-bottom: 15px; /* Space between buttons and table */
+}
+.dataTables_wrapper .dataTables_filter {
+    float: left;
+    margin-bottom: 15px;
+}
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 15px;
+}
+.dataTables_wrapper .dataTables_info {
+    clear: both; /* Ensure info text is below other controls */
+    padding-top: 10px;
+}
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    padding-top: 10px;
+}
+.dataTables_length select {
+    width: auto; /* Prevent select from taking full width */
+    display: inline-block;
+}
+.dataTables_filter input {
+    width: auto; /* Prevent input from taking full width */
+    display: inline-block;
+}
+
+/* Button styles for DataTables actions */
+.dt-button {
+    margin-right: 5px; /* Space between DataTables buttons */
+    border-radius: 0.25rem; /* Bootstrap-like border radius */
+    font-size: 0.875rem; /* Slightly smaller font */
+    padding: 0.375rem 0.75rem; /* Bootstrap button padding */
+    border: 1px solid #dee2e6; /* Light border */
+    background-color: var(--main-bg); /* Use theme variable */
+    color: var(--text-color); /* Use theme variable */
+    cursor: pointer;
+}
+.dt-button:hover {
+    background-color: #e2e6ea;
+    text-decoration: none;
+}
+
+
+.dt-button.buttons-excel, .dt-button.buttons-csv {
+    background-color: #28a745; /* Green for Excel/CSV */
+    color: #fff;
+    border-color: #28a745;
+}
+.dt-button.buttons-print {
+    background-color: #007bff; /* Blue for Print */
+    color: #fff;
+    border-color: #007bff;
+}
+
+/* Override default Bootstrap button styles for action column in table */
+.btn-group .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    margin-right: 2px; /* Small gap between action buttons */
+}
+.btn-group .btn-sm:last-child {
+    margin-right: 0;
+}
+
+/* Custom classes for no wrapping content in DataTables columns */
+.dt-nowrap {
+    white-space: nowrap;
+}
+.dt-head-nowrap {
+    white-space: nowrap;
+}

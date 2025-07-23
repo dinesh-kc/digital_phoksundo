@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load darta_filters %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+
+{% block content %}
+<div class="row g-4">
+  <!-- Summary Cards -->
+  <div class="col-md-3">
+    <div class="card text-bg-primary h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-inbox"></i> Total Darta</h5>
+        <p class="card-text fs-4">{{ total_darta }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-bg-success h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-box-arrow-up-right"></i> Total Chalani</h5>
+        <p class="card-text fs-4">{{ total_chalani }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-bg-warning h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-lock-fill"></i> Confidential</h5>
+        <p class="card-text fs-4">{{ total_confidential }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-bg-danger h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-calendar-x-fill"></i> Expiring Soon</h5>
+        <p class="card-text fs-4">{{ expiring_soon }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- Recent Darta/Chalani -->
+<div class="row mt-4">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header bg-light fw-bold">Recent Dartas</div>
+      <ul class="list-group list-group-flush">
+        {% for doc in recent_darta %}
+          <li class="list-group-item">
+            <i class="bi bi-inbox"></i> {{ doc.subject }} ({{ doc.document_date|to_nepali_date }})
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No recent dartas</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header bg-light fw-bold">Recent Chalanis</div>
+      <ul class="list-group list-group-flush">
+        {% for doc in recent_chalani %}
+          <li class="list-group-item">
+            <i class="bi bi-box-arrow-up-right"></i> {{ doc.subject }} ({{ doc.document_date|to_nepali_date }})
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No recent chalanis</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Follow-ups -->
+<div class="card mt-4">
+  <div class="card-header bg-info text-white fw-bold">
+    <i class="bi bi-calendar-check-fill"></i> Follow-ups This Week
+  </div>
+  <ul class="list-group list-group-flush">
+    {% for doc in followups %}
+      <li class="list-group-item">
+       <strong>{{ doc.subject }}</strong> – {{ doc.followup_date }} ({{ doc.doc_type }})
+
+      </li>
+    {% empty %}
+      <li class="list-group-item text-muted">No follow-ups due</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

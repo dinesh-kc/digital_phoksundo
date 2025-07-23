@@ -1,0 +1,65 @@
+<script>
+    function initializeDataTable(tableId, columnDefs = []) { // Added columnDefs parameter
+        $(document).ready(function() {
+            $('#' + tableId).DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false, // Keep autoWidth as false to allow custom widths
+                "responsive": true,
+                "dom": 'lBfrtip',
+                "buttons": [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        titleAttr: 'Export to Excel',
+                        className: 'btn btn-success btn-sm me-1',
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="fas fa-file-csv"></i> CSV',
+                        titleAttr: 'Export to CSV',
+                        className: 'btn btn-info btn-sm me-1',
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print"></i> Print',
+                        titleAttr: 'Print Table',
+                        className: 'btn btn-secondary btn-sm',
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    }
+                ],
+                "columnDefs": columnDefs, // Apply the passed column definitions
+                "language": {
+                    "lengthMenu": "Show _MENU_ entries",
+                    "zeroRecords": "No matching records found",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                    "infoEmpty": "Showing 0 to 0 of 0 entries",
+                    "infoFiltered": "(filtered from _MAX_ total entries)",
+                    "search": "Search:",
+                    "paginate": {
+                        "first": "First",
+                        "last": "Last",
+                        "next": "Next",
+                        "previous": "Previous"
+                    },
+                    "buttons": {
+                        "print": "Print",
+                        "excel": "Excel",
+                        "csv": "CSV"
+                    }
+                }
+            });
+        });
+    }
+</script>

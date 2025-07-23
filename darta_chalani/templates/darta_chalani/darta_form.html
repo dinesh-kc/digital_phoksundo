@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load darta_filters %} {# Make sure to load your custom filters #}
+
+{% block title %}{{ title }} - Digital Phoksundo{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block extra_head %}
+    {# 1. Include Nepali Datepicker CSS in the head #}
+    <link href="https://nepali-datepicker.github.io/nepali-datepicker/css/nepali.datepicker.v3.min.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Darta Document Details</h5>
+        </div>
+        <div class="card-body">
+            {# Manually render fields for perfect layout control #}
+            {% for field in form %}
+                <div class="mb-3 {% if field.name == 'is_confidential' %}form-check{% endif %}">
+                    {% if field.name != 'is_confidential' %}
+                        {{ field.label_tag }}
+                    {% endif %}
+
+                    {{ field }}
+
+                    {% if field.name == 'is_confidential' %}
+                         {{ field.label_tag }}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <div class="form-text text-muted small">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+
+                    {# Special handling to show current attachment link #}
+                    {% if field.name == 'attachment_file' and form.instance.pk and form.instance.attachment_file %}
+                        <p class="text-muted mt-2">
+                            Currently attached:
+                            <a href="{{ form.instance.attachment_file.url }}" target="_blank">
+                                {{ form.instance.attachment_file|filename }}
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Darta</button>
+    <a href="{% url 'darta_chalani:darta_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+{# 2. Include Nepali Datepicker JS at the end of the body #}
+<script src="https://nepali-datepicker.github.io/nepali-datepicker/js/nepali.datepicker.v3.min.js" type="text/javascript"></script>
+
+{# 3. Initialize the script on your form fields #}
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    // Find all inputs with the 'nepali-datepicker' class we added in forms.py
+    var nepaliDateInputs = document.querySelectorAll('.nepali-datepicker');
+
+    // Initialize the datepicker on each of them
+    nepaliDateInputs.forEach(function(input) {
+        input.nepaliDatePicker({
+            dateFormat: "%Y-%m-%d",      // Sets the format of the selected date
+            closeOnDateSelect: true,    // Closes the calendar after selection
+            language: "english"         // Use 'nepali' for Nepali numerals (e.g., २०८१-०४-०८)
+        });
+    });
+});
+</script>
+{% endblock extra_js %}

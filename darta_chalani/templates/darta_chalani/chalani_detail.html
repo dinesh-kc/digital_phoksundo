@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load darta_filters %} {# Add this line #}
+{% load darta_filters %}
+
+{% block title %}Chalani Details - {{ chalani.document_number }} - Digital Phoksundo{% endblock %}
+{% block page_title %}Chalani Details - {{ chalani.document_number }}{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5>Chalani Details: {{ chalani.document_number }}</h5>
+    </div>
+    <div class="card-body">
+        <p><strong>Subject:</strong> {{ chalani.subject }}</p>
+        <p><strong>Document Date:</strong> {{ chalani.document_date|to_nepali_date }}</p>
+        <p><strong>Fiscal Year:</strong> {{ chalani.fiscal_year.year_name }}</p>
+        <p><strong>Receiver Details:</strong> {{ chalani.sender_receiver_info }}</p>
+        <p><strong>Department:</strong> {{ chalani.department }}</p>
+        <p><strong>Document Type:</strong> {{ chalani.document_type }}</p>
+        <p><strong>Confidential:</strong> {% if chalani.is_confidential %}Yes{% else %}No{% endif %}</p>
+        <p><strong>Expiry Date:</strong> {% if chalani.expiry_date %}{{ chalani.expiry_date|date:"Y-m-d" }}{% else %}N/A{% endif %}</p>
+        <p><strong>Follow-up Date:</strong> {% if chalani.followup_date %}{{ chalani.followup_date|date:"Y-m-d" }}{% else %}N/A{% endif %}</p>
+        <p><strong>Remarks:</strong> {% if chalani.remarks %}{{ chalani.remarks }}{% else %}N/A{% endif %}</p>
+        <p><strong>Created By:</strong> {{ chalani.created_by.username|default:"N/A" }} on {{ chalani.created_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>Last Updated:</strong> {{ chalani.updated_at|date:"Y-m-d H:i" }}</p>
+
+        <h5 class="mt-4">Attached File</h5>
+        {% if chalani.attachment_file %}
+            <p>
+                <a href="{{ chalani.attachment_file.url }}" target="_blank" class="btn btn-sm btn-success">
+                    View/Download: {{ chalani.attachment_file|filename }} {# CHANGE THIS LINE #}
+                </a>
+            </p>
+        {% else %}
+            <p>No attached file for this Chalani document.</p>
+        {% endif %}
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        <a href="{% url 'darta_chalani:chalani_edit' chalani.pk %}" class="btn btn-warning me-2">Edit Chalani</a>
+        <a href="{% url 'darta_chalani:chalani_delete' chalani.pk %}" class="btn btn-danger">Delete Chalani</a>
+    </div>
+</div>
+{% endblock %}
